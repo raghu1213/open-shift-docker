@@ -59,26 +59,26 @@ docker:uat:
     - master
   allow_failure: false
 
-#  #################  DEPLOY UAT INSTANCE TO HEROKU UAT ENVIRONMENT ################
-#deploy:uat:
-#  image: docker:stable
-#  stage: deploy
-#  needs:
-#    - job: docker:uat
-#  services:
-#    - docker:dind
-#  environment:
-#    name: UAT
-#    url: $UAT_URL
-#  script:
-#    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-#    - docker pull registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat
-#    - docker login --username=$HEROKU_API_USER --password=$HEROKU_API_KEY registry.heroku.com
-#    - docker tag registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat registry.heroku.com/$APP_HEROKU_NAME_UAT/web
-#    - docker push registry.heroku.com/$APP_HEROKU_NAME_UAT/web
-#    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $APP_HEROKU_NAME_UAT
-#  only:
-#    - master
+  #################  DEPLOY UAT INSTANCE TO HEROKU UAT ENVIRONMENT ################
+deploy:uat:
+  image: docker:stable
+  stage: deploy
+  needs:
+    - job: docker:uat
+  services:
+    - docker:dind
+  environment:
+    name: UAT
+    url: $UAT_URL
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker pull registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat
+    - docker login --username=$HEROKU_API_USER --password=$HEROKU_API_KEY registry.heroku.com
+    - docker tag registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat registry.heroku.com/$APP_HEROKU_NAME_UAT/web
+    - docker push registry.heroku.com/$APP_HEROKU_NAME_UAT/web
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $APP_HEROKU_NAME_UAT
+  only:
+    - master
 
 #
 ##################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
