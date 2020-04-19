@@ -18,9 +18,8 @@ plugins {
 release {
   revertOnFail = true
   preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: "
-  tagCommitMessage = "[Gradle Release Plugin] - creating tag: [skip ci]"
+  tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
   newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: [skip ci]"
-  tagTemplate = "$version"
 
 }
 subprojects {
