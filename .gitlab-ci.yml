@@ -14,7 +14,7 @@ stages:
   - test
   - build
   - docker
-#  - deploy
+  - deploy
 
 ## Cache libraries in between jobs
 cache:
