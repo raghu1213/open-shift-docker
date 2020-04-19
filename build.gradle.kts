@@ -16,31 +16,31 @@ plugins {
   kotlin("plugin.spring") version "1.3.61" apply false
   id("net.researchgate.release") version "2.6.0"
 }
-release {
-  failOnCommitNeeded = true
-  failOnPublishNeeded = true
-  failOnSnapshotDependencies = true
-  failOnUnversionedFiles = true
-  failOnUpdateNeeded = true
-  revertOnFail = true
-  preCommitText = ""
-  preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: "
-  tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
-  newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: "
-  tagTemplate = "$version"
-//  versionPropertyFile = "gradle.properties"
-//  //buildTasks = ["build"]
-//  ignoredSnapshotDependencies = []
-//  pushReleaseVersionBranch = false
-//  git {
-//    requireBranch = "master"
-//    pushToRemote = "origin"
-//    pushToBranchPrefix = ""
-//    commitVersionFileOnly = false
-//    signTag = false
-//  }
-
-}
+//release {
+//  failOnCommitNeeded = true
+//  failOnPublishNeeded = true
+//  failOnSnapshotDependencies = true
+//  failOnUnversionedFiles = true
+//  failOnUpdateNeeded = true
+//  revertOnFail = true
+//  preCommitText = ""
+//  preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: "
+//  tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
+//  newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: "
+//  tagTemplate = "$version"
+//  //  versionPropertyFile = "gradle.properties"
+////  //buildTasks = ["build"]
+////  ignoredSnapshotDependencies = []
+////  pushReleaseVersionBranch = false
+////  git {
+////    requireBranch = "master"
+////    pushToRemote = "origin"
+////    pushToBranchPrefix = ""
+////    commitVersionFileOnly = false
+////    signTag = false
+////  }
+//
+//}
 subprojects {
   repositories {
     jcenter()
