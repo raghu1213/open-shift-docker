@@ -10,8 +10,6 @@ before_script:
   - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 stages:
   - build
@@ -43,7 +41,7 @@ build:
 
 #################  BUILD DOCKER IMAGE FOR UAT ENVIRONMENT  ################
 deploy:uat:
-  image: docker:stable
+  image: docker:latest
   stage: uat
   services:
     - docker:dind
@@ -62,9 +60,9 @@ deploy:uat:
 
 ##################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
 release:prod:
+  image: docker:latest
   stage: prod
   script:
-    - 'which git || (apt-get update -y && apt-get install git -y)'
     - git --version
     - git config user.email "raghu1213@hotmail.com"
     - git config user.name "Raghuveer Singh"
