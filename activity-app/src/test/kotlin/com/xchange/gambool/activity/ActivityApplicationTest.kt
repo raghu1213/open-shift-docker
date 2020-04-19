@@ -12,7 +12,7 @@ import org.hamcrest.CoreMatchers.`is` as Is
 class ActivityApplicationTest {
   @Test
   fun thisIsAUnitTest() {
-    println("This is from unit test")
+    println("This is changed from unit test")
     assertThat("unit test", Is(not(nullValue())))
   }
 

@@ -9,9 +9,14 @@ plugins {
   kotlin("jvm")
   kotlin("plugin.spring")
 }
+
+springBoot {
+  mainClassName = "com.xchange.gambool.activity.ActivityApplicationKt"
+}
+
 sourceSets {
   create("test-integration") {
-    withConvention(KotlinSourceSet::class) {
+    withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
       kotlin.srcDir(file("src/test-integration/kotlin"))
       resources.srcDir(file("src/test-integration/resources"))
       compileClasspath += sourceSets["main"].output + configurations["testRuntimeClasspath"]
@@ -20,12 +25,29 @@ sourceSets {
   }
 }
 
-
-
-val jar by tasks.getting(Jar::class) {
-  manifest {
-    attributes["Main-Class"] = "com.xchange.gambool.activity.ActivityApplication"
+(tasks.getByName("processResources") as ProcessResources).apply {
+  filesMatching("application.properties") {
+    expand(project.properties)
   }
+}
+
+tasks.register<Test>("integration-test") {
+  description = "Runs the integration tests."
+  group = "verification"
+  testClassesDirs = sourceSets["test-integration"].output.classesDirs
+  classpath = sourceSets["test-integration"].runtimeClasspath
+  mustRunAfter(tasks["test"])
+}
+
+tasks.named("check") {
+  dependsOn("integration-test")
+}
+tasks.bootRun {
+  val activeProfile = System.getProperty("spring.profiles.active")
+  if (activeProfile.isNullOrEmpty()){
+    systemProperty("spring.profiles.active", "test")
+  }
+
 }
 
 dependencies {
@@ -42,18 +64,6 @@ dependencies {
     exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
   }
   testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-}
-
-tasks.register<Test>("test-integration") {
-  description = "Runs the integration tests."
-  group = "verification"
-  testClassesDirs = sourceSets["test-integration"].output.classesDirs
-  classpath = sourceSets["test-integration"].runtimeClasspath
-  mustRunAfter(tasks["test"])
-}
-
-tasks.named("check") {
-  dependsOn("test-integration")
 }
 
 

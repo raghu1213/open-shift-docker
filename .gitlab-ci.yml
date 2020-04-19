@@ -1,0 +1,140 @@
+image: openjdk:13-jdk
+
+before_script:
+  - export APP_TYPE=services
+  - export APP_NAME=activity-gradle
+  - export APP_HEROKU_NAME_UAT=gambool-activity-service-uat
+  - export APP_HEROKU_NAME=gambool-activity-service
+  - export TARGET_DIR=activity-app/target
+  - export UAT_URL="https://gambool-activity-service-uat.herokuapp.com/services"
+  - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
+
+stages:
+  - build
+  - docker
+#  - deploy
+
+## Cache libraries in between jobs
+#cache:
+#  paths:
+#    - .m2/repository
+
+#################   package UAT ################
+
+build:uat:
+  stage: build
+  script:
+    - ./gradle clean test
+    - ./gradle build -x check
+  only:
+    - master
+  when: manual
+  allow_failure: false
+  artifacts:
+    paths:
+      - "build/libs/*-SNAPSHOT.jar"
+      - "*/build/libs/*-SNAPSHOT.jar"
+    when: always
+
+#################  BUILD DOCKER IMAGE FOR UAT ENVIRONMENT  ################
+docker:uat:
+  image: docker:stable
+  stage: docker
+  needs:
+    - job: build:uat
+      artifacts: true
+  services:
+    - docker:dind
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build -t registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat .
+    - docker push registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat
+  only:
+    - master
+  allow_failure: false
+
+#  #################  DEPLOY UAT INSTANCE TO HEROKU UAT ENVIRONMENT ################
+#deploy:uat:
+#  image: docker:stable
+#  stage: deploy
+#  needs:
+#    - job: docker:uat
+#  services:
+#    - docker:dind
+#  environment:
+#    name: UAT
+#    url: $UAT_URL
+#  script:
+#    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+#    - docker pull registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat
+#    - docker login --username=$HEROKU_API_USER --password=$HEROKU_API_KEY registry.heroku.com
+#    - docker tag registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat registry.heroku.com/$APP_HEROKU_NAME_UAT/web
+#    - docker push registry.heroku.com/$APP_HEROKU_NAME_UAT/web
+#    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $APP_HEROKU_NAME_UAT
+#  only:
+#    - master
+
+#
+##################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
+#build:prod:
+#  stage: build
+#  script:
+#    - git config user.email "raghu1213@hotmail.com"
+#    - git config user.name "Raghuveer Singh"
+#    - git checkout -f master
+#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+#    - eval $(ssh-agent -s)
+#    - mkdir -p ~/.ssh
+#    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+#    - chmod 400 ~/.ssh/id_ed25519
+#    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+#    - ssh-add ~/.ssh/id_ed25519
+#    - ./mvnw --batch-mode -DskipTests=true clean release:prepare -Pprod
+#    - rm -f $TARGET_DIR/*SNAPSHOT.jar
+#  only:
+#    - master
+#  when: manual
+#  allow_failure: false
+#  artifacts:
+#    paths:
+#      - "*/target/*.jar"
+#      - "target/*.jar"
+#    when: always
+#
+##################  BUILD DOCKER IMAGE FOR PRODUCTION WITH RELEASE VERSIONS  ################
+#docker:prod:
+#  image: docker:stable
+#  stage: docker
+#  needs:
+#    - job: build:prod
+#      artifacts: true
+#  services:
+#    - docker:dind
+#  script:
+#    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+#    - docker build -t registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:release .
+#    - docker push registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:release
+#  allow_failure: false
+#  only:
+#    - master
+#
+##################  DEPLOY RELEASE VERSION TO HEROKU PROD INSTANCE ################
+#deploy:prod:
+#  image: docker:stable
+#  stage: deploy
+#  needs:
+#    - job: docker:prod
+#  services:
+#    - docker:dind
+#  environment:
+#    name: PRODUCTION
+#    url: $PROD_URL
+#  script:
+#    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+#    - docker pull registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:release
+#    - docker login --username=$HEROKU_API_USER --password=$HEROKU_API_KEY registry.heroku.com
+#    - docker tag registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:release registry.heroku.com/$APP_HEROKU_NAME/web
+#    - docker push registry.heroku.com/$APP_HEROKU_NAME/web
+#    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $APP_HEROKU_NAME
+#  only:
+#    - master
