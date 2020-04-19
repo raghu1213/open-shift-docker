@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 group = "com.xchange.gambool"
 buildscript {
   repositories {
@@ -15,13 +16,14 @@ plugins {
   kotlin("plugin.spring") version "1.3.61" apply false
   id("net.researchgate.release") version "2.6.0"
 }
-release {
-  revertOnFail = true
-  preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: "
-  tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
-  newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: [skip ci]"
 
-}
+  release {
+    revertOnFail = true
+    preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: "
+    tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
+    newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: [skip ci]"
+  }
+
 subprojects {
   repositories {
     jcenter()

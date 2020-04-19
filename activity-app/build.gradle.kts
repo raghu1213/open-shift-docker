@@ -13,6 +13,13 @@ springBoot {
   mainClassName = "com.xchange.gambool.activity.ActivityApplicationKt"
 }
 
+release {
+  revertOnFail = true
+  preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: [skip ci]"
+  tagCommitMessage = "[Gradle Release Plugin] - creating tag: [skip ci]"
+  newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: [skip ci]"
+}
+
 sourceSets {
   create("test-integration") {
     withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
