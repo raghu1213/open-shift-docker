@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 
 group = "com.xchange.gambool"
-version = "0.0.1-SNAPSHOT"
 
 plugins {
   id("org.springframework.boot")

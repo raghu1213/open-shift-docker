@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 group = "com.xchange.gambool"
-version = "0.0.1-SNAPSHOT"
 buildscript {
   repositories {
     mavenCentral()
