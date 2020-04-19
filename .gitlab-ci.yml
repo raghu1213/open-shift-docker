@@ -13,7 +13,9 @@ before_script:
 stages:
   - test
   - build
-  - deploy
+  - uat
+  - prod
+
 
 ## Cache libraries in between jobs
 cache:
@@ -47,7 +49,7 @@ test:
 #################  BUILD DOCKER IMAGE FOR UAT ENVIRONMENT  ################
 deploy:uat:
   image: docker:stable
-  stage: deploy
+  stage: uat
   services:
     - docker:dind
   script:
@@ -65,7 +67,7 @@ deploy:uat:
 
 ##################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
 release:prod:
-  stage: build
+  stage: prod
   script:
     - git config user.email "raghu1213@hotmail.com"
     - git config user.name "Raghuveer Singh"
@@ -86,9 +88,9 @@ release:prod:
   allow_failure: false
   artifacts:
     paths:
-      - "*/target/*.jar"
-      - "target/*.jar"
-    when: always
+      - "build/libs/*-SNAPSHOT.jar"
+      - "*/build/libs/*-SNAPSHOT.jar"
+      when: always
 
 ##################  BUILD DOCKER IMAGE FOR PRODUCTION WITH RELEASE VERSIONS  ################
 #docker:prod:
