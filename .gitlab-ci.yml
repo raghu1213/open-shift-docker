@@ -24,11 +24,10 @@ stages:
 build:uat:
   stage: build
   script:
-    - ./gradle clean test
-    - ./gradle build -x check
+    - ./gradlew clean test
+    - ./gradlew build -x check
   only:
     - master
-  when: manual
   allow_failure: false
   artifacts:
     paths:
