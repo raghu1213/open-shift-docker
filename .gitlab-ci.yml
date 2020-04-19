@@ -64,7 +64,7 @@ deploy:uat:
 release:prod:
   stage: prod
   script:
-    - apk update && apk add git
+    - 'which git || (apt-get update -y && apt-get install git -y)'
     - git --version
     - git config user.email "raghu1213@hotmail.com"
     - git config user.name "Raghuveer Singh"
