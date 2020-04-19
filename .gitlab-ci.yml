@@ -11,8 +11,8 @@ before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
 stages:
-  - test
   - build
+  - test
   - uat
   - prod
 
@@ -90,7 +90,7 @@ release:prod:
     paths:
       - "build/libs/*-SNAPSHOT.jar"
       - "*/build/libs/*-SNAPSHOT.jar"
-      when: always
+    when: always
 
 ##################  BUILD DOCKER IMAGE FOR PRODUCTION WITH RELEASE VERSIONS  ################
 #docker:prod:
