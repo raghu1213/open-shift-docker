@@ -8,24 +8,26 @@ before_script:
   - export TARGET_DIR=activity-app/target
   - export UAT_URL="https://gambool-activity-service-uat.herokuapp.com/services"
   - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
+  - export GRADLE_USER_HOME=`pwd`/.gradle
 
 stages:
+  - test
   - build
   - docker
 #  - deploy
 
 ## Cache libraries in between jobs
-#cache:
-#  paths:
-#    - .m2/repository
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
 
-#################   package UAT ################
+#################  build  ################
 
-build:uat:
+build:
   stage: build
   script:
-    - ./gradlew clean test
-    - ./gradlew build -x check
+    - ./gradlew assemble
   only:
     - master
   allow_failure: false
@@ -34,6 +36,14 @@ build:uat:
       - "build/libs/*-SNAPSHOT.jar"
       - "*/build/libs/*-SNAPSHOT.jar"
     when: always
+
+
+#################   TEST ################
+test:
+    stage: test
+    script:
+      - ./gradlew check
+
 
 #################  BUILD DOCKER IMAGE FOR UAT ENVIRONMENT  ################
 docker:uat:
@@ -46,7 +56,7 @@ docker:uat:
     - docker:dind
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat .
+    - docker build --build-arg PROFILE="uat" -t registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat .
     - docker push registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:uat
   only:
     - master
