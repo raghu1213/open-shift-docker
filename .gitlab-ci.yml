@@ -10,9 +10,11 @@ before_script:
   - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
 stages:
   - build
-  - test
   - uat
   - prod
 
@@ -29,6 +31,7 @@ build:
   stage: build
   script:
     - ./gradlew assemble
+    - ./gradlew check
   only:
     - master
   allow_failure: false
@@ -37,14 +40,6 @@ build:
       - "build/libs/*-SNAPSHOT.jar"
       - "*/build/libs/*-SNAPSHOT.jar"
     when: always
-
-
-#################   TEST ################
-test:
-    stage: test
-    script:
-      - ./gradlew check
-
 
 #################  BUILD DOCKER IMAGE FOR UAT ENVIRONMENT  ################
 deploy:uat:
