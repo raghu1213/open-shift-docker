@@ -49,9 +49,6 @@ test:
 docker:uat:
   image: docker:stable
   stage: docker
-  needs:
-    - job: build:uat
-      artifacts: true
   services:
     - docker:dind
   script:
