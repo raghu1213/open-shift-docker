@@ -11,7 +11,7 @@ before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  CI_DEBUG_TRACE: "true"
+#  CI_DEBUG_TRACE: "true"
 
 stages:
   - build
@@ -73,7 +73,7 @@ release:prod:
     - chmod 400 ~/.ssh/id_ed25519
     - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
     - ssh-add ~/.ssh/id_ed25519
-    - ./gradlew :activity-app:release -Prelease.useAutomaticVersion=true
+    - ./gradlew :activity-app:release -Prelease.useAutomaticVersion=true --stacktrace --scan
     - ./gradlew :release -Prelease.useAutomaticVersion=true
     - rm -f $TARGET_DIR/*SNAPSHOT.jar
   only:
