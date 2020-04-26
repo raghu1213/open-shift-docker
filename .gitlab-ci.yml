@@ -63,9 +63,9 @@ deploy:uat:
 release:prod:
   stage: prod
   script:
-#    - git config user.email "raghu1213@hotmail.com"
-#    - git config user.name "Raghuveer Singh"
-#    - git checkout -f master
+    - git config user.email "raghu1213@hotmail.com"
+    - git config user.name "Raghuveer Singh"
+    - git checkout -f master
 #    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
 #    - eval $(ssh-agent -s)
 #    - mkdir -p ~/.ssh
