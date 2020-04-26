@@ -1,4 +1,4 @@
-FROM openjdk:13-jdk
+FROM openjdk:11-jdk
 
 ARG JAR_FILE=activity-app/build/libs/*.jar
 COPY ${JAR_FILE} app.jar
