@@ -8,7 +8,7 @@ before_script:
   - export TARGET_DIR=activity-app/build/libs
   - export UAT_URL="https://gambool-activity-service-uat.herokuapp.com/services"
   - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
-  - export GRADLE_USER_HOME=`pwd`/.gradle
+#  - export GRADLE_USER_HOME=`pwd`/.gradle
 
 
 stages:
@@ -60,7 +60,6 @@ deploy:uat:
 
 ##################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
 release:prod:
-  image: docker:stable
   stage: prod
   script:
     - git config user.email "raghu1213@hotmail.com"
