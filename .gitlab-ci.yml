@@ -41,7 +41,7 @@ build:
 
 #################  BUILD DOCKER IMAGE FOR UAT ENVIRONMENT  ################
 deploy:uat:
-  image: docker:latest
+  image: docker:stable
   stage: uat
   services:
     - docker:dind
@@ -60,10 +60,9 @@ deploy:uat:
 
 ##################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
 release:prod:
-  image: docker:latest
+  image: docker:stable
   stage: prod
   script:
-    - git --version
     - git config user.email "raghu1213@hotmail.com"
     - git config user.name "Raghuveer Singh"
     - git checkout -f master
