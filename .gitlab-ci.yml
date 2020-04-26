@@ -1,4 +1,4 @@
-image: openjdk:13-jdk
+image: openjdk:11-jdk
 
 before_script:
   - export APP_TYPE=services
