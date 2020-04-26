@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import net.researchgate.release.GitAdapter
 
 group = "com.xchange.gambool"
 buildscript {
@@ -22,6 +23,7 @@ plugins {
     preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: "
     tagCommitMessage = "[Gradle Release Plugin] - creating tag: "
     newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: [skip ci]"
+
   }
 
 subprojects {
