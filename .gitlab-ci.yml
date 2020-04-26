@@ -8,6 +8,7 @@ before_script:
   - export TARGET_DIR=activity-app/build/libs
   - export UAT_URL="https://gambool-activity-service-uat.herokuapp.com/services"
   - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
+  - git show-ref --heads -s master
 #  - export GRADLE_USER_HOME=`pwd`/.gradle
 
 
