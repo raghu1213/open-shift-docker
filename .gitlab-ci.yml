@@ -8,7 +8,6 @@ before_script:
   - export TARGET_DIR=activity-app/build/libs
   - export UAT_URL="https://gambool-activity-service-uat.herokuapp.com/services"
   - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
-  - export GRADLE_USER_HOME=`pwd`/.gradle
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   CI_DEBUG_TRACE: "true"
@@ -68,11 +67,11 @@ release:prod:
     - git checkout -f master
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 400 ~/.ssh/id_ed25519
     - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
+    - ssh-add ~/.ssh/id_ed25519
     - ./gradlew :activity-app:release --info -Prelease.useAutomaticVersion=true
     - ./gradlew :release --info -Prelease.useAutomaticVersion=true
     - rm -f $TARGET_DIR/*SNAPSHOT.jar
