@@ -66,13 +66,13 @@ release:prod:
     - git config user.email "raghu1213@hotmail.com"
     - git config user.name "Raghuveer Singh"
     - git checkout -f master
-#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
-#    - eval $(ssh-agent -s)
-#    - mkdir -p ~/.ssh
-#    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-#    - chmod 400 ~/.ssh/id_ed25519
-#    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-#    - ssh-add ~/.ssh/id_ed25519
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 400 ~/.ssh/id_ed25519
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+    - ssh-add ~/.ssh/id_ed25519
     - ./gradlew :activity-app:release -Prelease.useAutomaticVersion=true
     - ./gradlew :release -Prelease.useAutomaticVersion=true
     - rm -f $TARGET_DIR/*SNAPSHOT.jar
