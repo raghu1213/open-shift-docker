@@ -68,13 +68,13 @@ release:prod:
     - git checkout -f master
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
     - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-    - chmod 400 ~/.ssh/id_ed25519
+    - chmod 700 ~/.ssh
     - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-    - ssh-add ~/.ssh/id_ed25519
-    - ./gradlew :activity-app:release -Prelease.useAutomaticVersion=true
-    - ./gradlew :release -Prelease.useAutomaticVersion=true
+    - chmod 644 ~/.ssh/known_hosts
+    - ./gradlew :activity-app:release --info -Prelease.useAutomaticVersion=true
+    - ./gradlew :release --info -Prelease.useAutomaticVersion=true
     - rm -f $TARGET_DIR/*SNAPSHOT.jar
   only:
     - master
