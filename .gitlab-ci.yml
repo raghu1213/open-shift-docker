@@ -72,7 +72,7 @@ release:prod:
 #    - chmod 400 ~/.ssh/id_ed25519
 #    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
 #    - ssh-add ~/.ssh/id_ed25519
-    - ./gradlew :sub:activity-app -Prelease.useAutomaticVersion=true
+    - ./gradlew :activity-app:release -Prelease.useAutomaticVersion=true
     - ./gradlew :release -Prelease.useAutomaticVersion=true
     - rm -f $TARGET_DIR/*SNAPSHOT.jar
   only:
