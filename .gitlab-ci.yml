@@ -57,28 +57,47 @@ deploy:uat:
   allow_failure: false
 
 
-##################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
-release:prod:
+###################  FREEZE RELEASE VERSION AND UPDATE SNAPSHOT TO RELEASE VERSION  ################
+#release:prod:
+#  stage: prod
+#  script:
+#    - git config user.email "raghu1213@hotmail.com"
+#    - git config user.name "Raghuveer Singh"
+#    - git checkout -f master
+#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+#    - eval $(ssh-agent -s)
+#    - mkdir -p ~/.ssh
+#    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+#    - chmod 400 ~/.ssh/id_ed25519
+#    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+#    - ssh-add ~/.ssh/id_ed25519
+#    - ./gradlew :activity-app:release --info -Prelease.useAutomaticVersion=true
+#    - ./gradlew :release --info -Prelease.useAutomaticVersion=true
+#    - rm -f $TARGET_DIR/*SNAPSHOT.jar
+#  only:
+#    - master
+#  when: manual
+#  allow_failure: false
+#  artifacts:
+#    paths:
+#      - "*/build/libs/*-SNAPSHOT.jar"
+#    when: always
+
+#################  BUILD DOCKER IMAGE FOR UAT ENVIRONMENT  ################
+deploy:prod:
+  image: docker:stable
   stage: prod
+  services:
+    - docker:dind
   script:
-    - git config user.email "raghu1213@hotmail.com"
-    - git config user.name "Raghuveer Singh"
-    - git checkout -f master
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
-    - eval $(ssh-agent -s)
-    - mkdir -p ~/.ssh
-    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-    - chmod 400 ~/.ssh/id_ed25519
-    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-    - ssh-add ~/.ssh/id_ed25519
-    - ./gradlew :activity-app:release --info -Prelease.useAutomaticVersion=true
-    - ./gradlew :release --info -Prelease.useAutomaticVersion=true
-    - rm -f $TARGET_DIR/*SNAPSHOT.jar
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build --build-arg PROFILE="prod" -t registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:prod .
+    - docker push registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:prod
+    - docker login --username=$HEROKU_API_USER --password=$HEROKU_API_KEY registry.heroku.com
+    - docker tag registry.gitlab.com/xchange-gambool/$APP_TYPE/$APP_NAME:prod registry.heroku.com/$APP_HEROKU_NAME/web
+    - docker push registry.heroku.com/$APP_HEROKU_NAME/web
+    - docker run --rm -e HEROKU_API_KEY=$HEROKU_API_KEY wingrunr21/alpine-heroku-cli container:release web --app $APP_HEROKU_NAME
   only:
     - master
-  when: manual
   allow_failure: false
-  artifacts:
-    paths:
-      - "*/build/libs/*-SNAPSHOT.jar"
-    when: always
+  when: manual
