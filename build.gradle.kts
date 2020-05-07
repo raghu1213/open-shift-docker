@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import net.researchgate.release.GitAdapter
+
 
 group = "com.xchange.gambool"
 buildscript {
@@ -17,7 +17,7 @@ plugins {
   kotlin("plugin.spring") version "1.3.61" apply false
   id("net.researchgate.release") version "2.6.0"
 }
-
+// Left it here. though I am not able to make release puging work with gitlab
   release {
     revertOnFail = true
     preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: "
@@ -25,7 +25,8 @@ plugins {
     newVersionCommitMessage = "[Gradle Release Plugin] - new version commit: [skip ci]"
 
   }
-
+//Following settings will be applied to all the subprojects
+//maintain common settings at parent level
 subprojects {
   repositories {
     jcenter()
@@ -35,6 +36,7 @@ subprojects {
     plugin("io.spring.dependency-management")
     plugin("java")
     plugin("net.researchgate.release")
+
   }
 
   tasks.withType<Test> {
@@ -51,6 +53,7 @@ subprojects {
 
 }
 
+// delete build directory from parent. it is not needed
 gradle.buildFinished {
   println("deleting " + project.buildDir)
   project.buildDir.deleteRecursively()

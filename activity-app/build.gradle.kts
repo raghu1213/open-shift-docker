@@ -4,15 +4,15 @@ group = "com.xchange.gambool"
 
 plugins {
   id("org.springframework.boot")
-  id("io.spring.dependency-management")
-  kotlin("jvm")
   kotlin("plugin.spring")
+  kotlin("jvm")
 }
 
 springBoot {
   mainClassName = "com.xchange.gambool.activity.ActivityApplicationKt"
 }
 
+// these release settings are not used
 release {
   revertOnFail = true
   preTagCommitMessage = "[Gradle Release Plugin] - pre tag commit: [skip ci]"
