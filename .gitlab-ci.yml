@@ -10,7 +10,6 @@ before_script:
   - export PROD_URL="https://gambool-activity-service.herokuapp.com/services"
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  CI_DEBUG_TRACE: "true"
 
 stages:
   - build
